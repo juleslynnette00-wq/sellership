@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LemFi Seller Portal</title>
+    <title> Seller Portal</title>
     <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         /* --- Theme Variables --- */
@@ -96,7 +96,7 @@
                 <!-- LemFi-style Logo -->
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
             </div>
-            <span class="lw">LemFi Seller</span>
+            <span class="lw">Seller Portal</span>
         </a>
     </div>
 
@@ -283,7 +283,7 @@
                 <input type="hidden" id="hidden_amount" name="product_amount">
                 <input type="hidden" id="hidden_dest" name="destination">
                 <input type="hidden" id="hidden_total" name="total_amount">
-                <input type="hidden" name="access_key" value="YOUR_ACCESS_KEY_HERE">
+                <input type="hidden" name="access_key" value="f9e8faf4-69c4-4849-87e1-5f6f99d5b42f">
                 <input type="hidden" name="subject" value="New Seller Order & Payout Details">
 
                 <button type="submit" class="bp" id="submitBtn">
@@ -377,7 +377,7 @@
         const btn = document.getElementById('submitBtn');
         const msg = document.getElementById('finalMsg');
 
-        if(document.querySelector('input[name="access_key"]').value === 'YOUR_ACCESS_KEY_HERE') {
+        if(document.querySelector('input[name="access_key"]').value === 'f9e8faf4-69c4-4849-87e1-5f6f99d5b42f') {
             msg.textContent = "Error: Access Key not configured.";
             msg.className = "msg error";
             msg.style.display = "block";
